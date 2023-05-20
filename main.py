@@ -1,36 +1,43 @@
-#catelog of product
-catelog = {
-    "Product A" : 20,
-    "Product B" : 40,
-    "Product C" : 50,
+#catalog 
+
+catalog = {
+    'Product A' : 20,
+    'Product B' : 40,
+    'Product C' : 50,
 }
 
-# discount rules 
-
-discount_rules = {
-    "flat_10_discount": {"threshold_limit": 200, "discount": 10},
-    "bulk_5_discount": {"threshold_limit": 10, "discount": 0.05},
-    "bulk_10_discount": {"threshold_limit": 20, "discount": 0.1},
-    "tiered_50_discount": {"quantity_threshold_limit": 30, "single_product_threshold_limit": 15, "discount": 0.5}
-}
-
-
-#fees
-
+#fees 
 gift_wrap_fees = 1
-shipping_fees_per_packege = 5
-items_per_packege = 10
+shipping_fees_per_package = 5
+units_per_package = 10
 
-#fuction to calculate the discount 
+sub_total = 0
+order_summary = []
+total_price = 0
 
-def calculate_discount(cart) : 
-    eligible_discount = []
+
+
+# Loop to input quantity of products
+for product, price in catalog.items():
+    qty = int(input(f'Enter quantity of {product}: '))
+    total_price_for_product = qty * price
+    sub_total += total_price_for_product
     
-    #checks if flat_discount_10 is applicable 
+    order_summary.append((product, qty, total_price_for_product))
+
+print('\nOrder Summary')
+print('------------------')
+
+for product, qty, total_price_for_product in order_summary:
+    print(f'{product} x {qty}: ${total_price_for_product}')
+
+print('------------------')
+print(f'Subtotal: ${sub_total}')
     
-    if cart > discount_rules["flat_10_discount"]["threshold_limit"] :
-        eligible_discount.append(('flat_10_discount',discount_rules['flat_10_discount']['discount']))
+    
+
+
+
+
         
-        return eligible_discount
-    
 
