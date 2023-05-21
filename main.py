@@ -50,10 +50,15 @@ for product, price in catalog.items():
 
     
     
-#calculating total price 
+#calculating shipping fees
 def calculate_shipping_charge() :
-    packages = total_qty//units_per_package
-    shipping_fees = shipping_fees_per_package * packages
+    packages = total_qty // units_per_package  # Calculate the number of packages needed
+    
+    # If there are remaining units add an additional package
+    if total_qty % units_per_package != 0:  
+        packages += 1
+    shipping_fees = packages * shipping_fees_per_package
+    
     
     return shipping_fees
     
@@ -74,7 +79,7 @@ def calculate_flat_10_discount():
     flat_10_discount_rate = 0
     if sub_total > discount_rules['flat_10_discount']['threshold'] :
         flat_10_discount_rate = discount_rules['flat_10_discount']['discount']
-    eligible_discount.append({'flat_10_discount': flat_10_discount_rate})
+    eligible_discount.append({'flat_10': flat_10_discount_rate})
     return flat_10_discount_rate
 
     
@@ -85,7 +90,7 @@ def calculate_bulk_5_discount():
         if qty > discount_rules['bulk_5_discount']['threshold'] :
             discount_amount = price * 0.05
             total_bulk_5_discount_amount += discount_amount
-    eligible_discount.append({'bulk_5_discount':total_bulk_5_discount_amount})
+    eligible_discount.append({'bulk_5':total_bulk_5_discount_amount})
     return total_bulk_5_discount_amount
     
 #Fuction to calculate bulk 10 discount
@@ -93,7 +98,7 @@ def calculat_bulk_10_discount():
     bulk_10_discount_rate = 0
     if total_qty > discount_rules['bulk_10_discount']['threshold'] : 
         bulk_10_discount_rate = sub_total * discount_rules['bulk_10_discount']['discount']
-    eligible_discount.append({'bulk_10_discount' : bulk_10_discount_rate })
+    eligible_discount.append({'bulk_10' : bulk_10_discount_rate })
     return bulk_10_discount_rate
 
 #Fuction to calculate tiered 50 discount
@@ -107,7 +112,7 @@ def calculate_tiered_50_discount():
             discount_amount = (discounted_units * product_price * discount_rules['tiered_50_discount']['discount'])
             tiered_50_discount_rate += discount_amount
             
-    eligible_discount.append({'tiered_50_discount' : tiered_50_discount_rate})
+    eligible_discount.append({'tiered_50' : tiered_50_discount_rate})
     return tiered_50_discount_rate
         
 
@@ -144,24 +149,36 @@ total_price = calculate_total(
 
 #display details 
 print('\nOrder Summary')
-print('----------------------------')
+print('--------------------------------------\n')
+
+print(f'Produnt Name          Price')
+print('--------------------------------------\n')
 
 for product, qty, total_price_for_product in order_summary:
-    print(f'{product} x {qty}: ${total_price_for_product}')
+    print(f'{product}   {catalog[product]} x {qty}  : ${total_price_for_product}')
 
-print('----------------------------')
-print(f'total quantity : {total_qty}')
-print(f'Subtotal: ${sub_total}')
+print('--------------------------------------')
+print(f'Total Quantity       : {total_qty}\n')
+print(f'Subtotal             : ${sub_total}\n')
 
-print('----------------------------')
-print(f'shipping charge : ${total_shipping_fees}')
+print('--------------------------------------\n')
+
+print('Extra charges applicable\n')
+
+print(f'shipping charge      : ${total_shipping_fees}')
 print(f'Gifts Wrapped charge : ${total_gift_wrap_fees}')
+
+print('--------------------------------------\n')
+
+print('Discounts available\n')
 
 for discount in eligible_discount :
     for discount_rule, discount_rate in discount.items() :
-        print(f'{discount_rule } : ${discount_rate}')
+        if discount_rate != 0:
+            print(f'{discount_rule }         :   ${discount_rate}')
     
 
-print('----------------------------')
-print(f'Total Price : {total_price}')
+print('--------------------------------------\n')
+print(f'Total Price         : ${total_price}\n')
 
+print('--------------------------------------\n')
